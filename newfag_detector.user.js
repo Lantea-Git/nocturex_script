@@ -141,11 +141,11 @@
 
       if (!jvcdvBody) return;
 
-      let col = jvcdvBody.querySelector('.col-md-6');
+      let col = jvcdvBody.querySelector('.col-lg-6');
 
       if (!col) {
         col = document.createElement('div');
-        col.classList.add('col-md-6');
+        col.classList.add('col-lg-6');
         jvcdvBody.after(col);
       }
 
@@ -154,5 +154,5 @@
     return;
   }
 
-  searchAndDisplay(document.querySelector('#page-profil > .layout__content > .row > .col-md-6'));
+  searchAndDisplay(document.querySelector('#page-profil > .layout__content > .row > .col-lg-6'));
 })();
