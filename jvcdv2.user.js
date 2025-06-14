@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         JVCDV 2
-// @version      3.0
+// @version      3.1
 // @description  Voir les profils des comptes bannis !
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*
@@ -44,7 +44,7 @@
     }
   });
 
-  const badgeBaseUrl = `https://static.jvc.gg/${staticVersion}/img/profils/badges/64px/`;
+  const badgeBaseUrl = `https://static.jvc.gg/${staticVersion}/img/profils/badges/256px/badges-web/`;
   const badgeUrl = (name) => `${badgeBaseUrl}badge-${name}.png`;
 
   const badges = {
@@ -57,6 +57,18 @@
     7: { name: 'Rang Saphir', url: badgeUrl('rang-saphir') },
     8: { name: 'Rang Émeraude', url: badgeUrl('rang-emeraude') },
     9: { name: 'Rang Diamant', url: badgeUrl('rang-diamant') },
+    10: { name: 'Paris Games Week 2015', url: badgeUrl('pgw-2015') },
+    11: { name: 'Paris Games Week 2016', url: badgeUrl('pgw-2016') },
+    12: { name: 'Paris Games Week 2017', url: badgeUrl('pgw-2017') },
+    13: { name: 'JV Fan Contest Bronze', url: badgeUrl('challenge-season-1-bronze') },
+    14: { name: 'JV Fan Contest Argent', url: badgeUrl('challenge-season-1-argent') },
+    15: { name: 'JV Fan Contest Or', url: badgeUrl('challenge-season-1-or') },
+    16: { name: 'JV Fan Contest Platine', url: badgeUrl('challenge-season-1-platine') },
+    17: { name: 'JV Fan Contest Diamant', url: badgeUrl('challenge-season-1-diamant') },
+    18: { name: 'JV Fan Contest Elite', url: badgeUrl('challenge-season-1-elite') },
+    19: { name: 'JV Fan Contest Champion', url: badgeUrl('challenge-season-1-champion') },
+    20: { name: 'JV Fan Contest Légende', url: badgeUrl('challenge-season-1-legend') },
+    22: { name: 'Vous Ne Passerez Pas', url: badgeUrl('vous-ne-passerez-pas') },
   };
 
   const machines = {
@@ -186,7 +198,7 @@
 
   let html = '';
 
-  html += '<div class="col-md-6">';
+  html += '<div class="col-lg-6">';
 
   if (profile.info) {
     empty = false;
@@ -256,7 +268,7 @@
     console.log(profile.badges);
 
     const badgesHtml = profile.badges.reduce(
-      (result, badgeId) => result + (badges[badgeId] ? `<img src="${badges[badgeId].url}" alt="${badges[badgeId].name}" title="${badges[badgeId].name}">` : ''),
+      (result, badgeId) => result + (badges[badgeId] ? `<figure class="figure col-auto"><img src="${badges[badgeId].url}" alt="${badges[badgeId].name}" title="${badges[badgeId].name}"></figure>` : ''),
       '',
     );
 
@@ -266,14 +278,14 @@
           <h2>Badges JeuxVideo.com</h2>
         </div>
         <div class="body hauts-faits">
-          <div class="liste-hauts-faits">
-            ${badgesHtml}
+          <div class="liste-hauts-faits justify-content-center row mt-5 m-auto js-list-badge">
+             ${badgesHtml}
           </div>
         </div>
       </div>`;
   }
 
-  html += '</div><div class="col-md-6">';
+  html += '</div><div class="col-lg-6">';
 
   if (profile.description && profile.description.tree) {
     empty = false;
