@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.3
+// @version      2.4
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -36,7 +36,7 @@
 
     pseudoId = parseInt(pseudoId, 10);
 
-    let bloc
+    let bloc;
     const createBloc = (html) => {
       if (!bloc) {
         bloc = document.createElement('div');
