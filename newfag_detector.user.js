@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.2
+// @version      2.3
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -36,18 +36,24 @@
 
     pseudoId = parseInt(pseudoId, 10);
 
+    let bloc
     const createBloc = (html) => {
-      const div = document.createElement('div');
-      div.classList.add('bloc-default-profil');
-      div.innerHTML = `
-        <div class="bloc-default-profil-header">
-          <h2>Newfag Detector</h2>
-        </div>
-        <div class="bloc-default-profil-body">
-          ${html}
-        </div>`;
-      col.appendChild(div);
+      if (!bloc) {
+        bloc = document.createElement('div');
+        bloc.classList.add('bloc-default-profil');
+        bloc.innerHTML = `
+          <div class="bloc-default-profil-header">
+            <h2>Newfag Detector</h2>
+          </div>
+          <div class="bloc-default-profil-body">
+          </div>`;
+        col.appendChild(bloc);
+      }
+      // Injecte le contenu html à chaque appel
+      bloc.querySelector('.bloc-default-profil-body').innerHTML = html;
     };
+
+    createBloc(`<p style="margin-left: 10px;">Chargement ...</p>`);
 
     const createBlocError = (message) => createBloc(`<p style="margin-left: 10px;">${message || 'La date de création du pseudo n\'a pas pu être estimée.'}</p>`);
 
