@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.4
+// @version      2.6
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -46,16 +46,23 @@
             <h2>Newfag Detector</h2>
           </div>
           <div class="bloc-default-profil-body">
+            <ul class="display-line-lib">
+              <li>
+                <div class="info-lib">Membre depuis :</div>
+                <div class="info-value">
+                </div>
+              </li>
+            </ul>
           </div>`;
         col.appendChild(bloc);
       }
       // Injecte le contenu html à chaque appel
-      bloc.querySelector('.bloc-default-profil-body').innerHTML = html;
+      bloc.querySelector('.info-value').innerHTML = html;
     };
 
-    createBloc(`<p style="margin-left: 10px;">Chargement ...</p>`);
+    createBloc(`Chargement ...`);
 
-    const createBlocError = (message) => createBloc(`<p style="margin-left: 10px;">${message || 'La date de création du pseudo n\'a pas pu être estimée.'}</p>`);
+    const createBlocError = (message) => createBloc(`${message || 'La date de création du pseudo n\'a pas pu être estimée.'}`);
 
     const requestApiJvc = (url) => new Promise((resolve, reject) => {
       const timestamp = new Date().toISOString();
@@ -133,13 +140,7 @@
 
     const nbDays = daysBetween(dateBefore, new Date());
 
-    createBloc(`
-      <ul class="display-line-lib">
-        <li>
-          <div class="info-lib">Membre depuis :</div>
-          <div class="info-value">${dateBeforeFormated} (${displayNumber(nbDays)} jours)</div>
-        </li>
-      </ul>`);
+    createBloc(`${dateBeforeFormated} (${displayNumber(nbDays)} jours)`);
   };
 
   const alertDanger = document.querySelector('#page-profil .alert.alert-danger');
