@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.7.2
+// @version      2.7.3
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -63,13 +63,18 @@
 
     createBloc(`<a id="voir-date" href="#" title="Demande de la bande passante" >Cliquer pour afficher la date</a>`);
 
-     //Continue fonction
-    await new Promise(resolve => {
-      bloc.querySelector('#voir-date').addEventListener('click', e => {
-        e.preventDefault(); //anule la redirection
-        resolve(); //click on continue la fonction noel
-      });
+    //Continue fonction (click ou souris over)
+    await new Promise(continuer => {
+      const lien = bloc.querySelector('#voir-date');
+      const typesEvenement = ['click', 'mouseover'];
+      for (const type of typesEvenement) {
+        lien.addEventListener(type, event => {
+          event.preventDefault();
+          continuer();
+        });
+      }
     });
+
 
     createBloc(`Chargement ...`);
 
