@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.6
+// @version      2.7
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -59,6 +59,17 @@
       // Injecte le contenu html à chaque appel
       bloc.querySelector('.info-value').innerHTML = html;
     };
+
+
+    createBloc(`<a id="voir-date" href="#">Afficher Date (Requêtes serveurs)</a>`);
+
+     //Continue fonction
+    await new Promise(resolve => {
+      bloc.querySelector('#voir-date').addEventListener('click', e => {
+        e.preventDefault(); //anule la redirection
+        resolve(); //click on continue la fonction noel
+      });
+    });
 
     createBloc(`Chargement ...`);
 
