@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.7.1
+// @version      2.7.2
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -61,7 +61,7 @@
     };
 
 
-    createBloc(`<a id="voir-date" href="#" title="Demande de la bande passante" >Afficher Date</a>`);
+    createBloc(`<a id="voir-date" href="#" title="Demande de la bande passante" >Cliquer pour afficher la date</a>`);
 
      //Continue fonction
     await new Promise(resolve => {
