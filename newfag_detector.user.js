@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.7.3
+// @version      2.7.5
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -61,6 +61,14 @@
     };
 
 
+    const createBlocError = (message) => createBloc(`${message || 'La date de création du pseudo n\'a pas pu être estimée.'}`);
+
+    if (pseudoId <= 2499961) {
+      createBlocError('Ce pseudo a été créé avant le 16 février 2010.<br>La date exacte ne peut pas être estimée.');
+      return;
+    }
+
+
     createBloc(`<a id="voir-date" href="#" title="Demande de la bande passante" >Cliquer pour afficher la date</a>`);
 
     //Continue fonction (click ou souris over)
@@ -69,7 +77,7 @@
       const typesEvenement = ['click', 'mouseover'];
       for (const type of typesEvenement) {
         lien.addEventListener(type, event => {
-          event.preventDefault();
+          event.preventDefault(); //anule la redirection href
           continuer();
         });
       }
@@ -77,8 +85,6 @@
 
 
     createBloc(`Chargement ...`);
-
-    const createBlocError = (message) => createBloc(`${message || 'La date de création du pseudo n\'a pas pu être estimée.'}`);
 
     const requestApiJvc = (url) => new Promise((resolve, reject) => {
       const timestamp = new Date().toISOString();
@@ -96,11 +102,6 @@
         onerror: (response) => reject(response),
       });
     });
-
-    if (pseudoId <= 2499961) {
-      createBlocError('Ce pseudo a été créé avant le 16 février 2010.<br>La date exacte n\'a pas pu être estimée.');
-      return;
-    }
 
     const searchDate = async (direction) => {
       const maxTry = 20;
