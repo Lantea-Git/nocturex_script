@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.7.5
+// @version      2.7.7
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -151,7 +151,7 @@
 
     if (dateBeforeFormated !== dateAfterFormated) {
       console.log('Newfag Detector: Les deux dates ne correspondent pas', dateBeforeFormated, dateAfterFormated);
-      createBlocError();
+      createBlocError(`Ce pseudo a été créé entre <br>Le 20 février 2013 et le 21 février 2013.<br>Le jour exact ne peut pas être estimé.`);
       return;
     }
 
