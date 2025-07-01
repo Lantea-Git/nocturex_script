@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.7.8
+// @version      2.7.9
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -69,7 +69,7 @@
     }
 
 
-    createBloc(`<a id="voir-date" href="#" title="Demande de la bande passante" >Cliquer pour afficher la date</a>`);
+    createBloc(`<a id="voir-date" href="#">Cliquer pour afficher la date</a>`);
 
     //Continue fonction (click ou souris over)
     await new Promise(continuer => {
@@ -84,7 +84,7 @@
     });
 
 
-    createBloc(`Chargement ...`);
+    createBloc(`Le renard recherche ...`);
 
     const requestApiJvc = (url) => new Promise((resolve, reject) => {
       const timestamp = new Date().toISOString();
