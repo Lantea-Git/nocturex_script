@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.8.0
+// @version      2.8.1
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -84,7 +84,7 @@
     });
 
 
-    createBloc(`Newfag Detector Recherche ...`);
+    createBloc(`Newfag Detector cherche ...`);
 
     const requestApiJvc = (url) => new Promise((resolve, reject) => {
       const timestamp = new Date().toISOString();
