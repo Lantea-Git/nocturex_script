@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.7.9
+// @version      2.8.0
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -84,7 +84,7 @@
     });
 
 
-    createBloc(`Le renard recherche ...`);
+    createBloc(`Newfag Detector Recherche ...`);
 
     const requestApiJvc = (url) => new Promise((resolve, reject) => {
       const timestamp = new Date().toISOString();
