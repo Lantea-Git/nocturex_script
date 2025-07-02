@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.8.1
+// @version      2.8.2
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -54,7 +54,7 @@
               </li>
             </ul>
           </div>`;
-        col.appendChild(bloc);
+        col.insertBefore(bloc, col.children[1] || null);
       }
       // Injecte le contenu html à chaque appel
       bloc.querySelector('.info-value').innerHTML = html;
