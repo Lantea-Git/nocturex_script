@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.8.2
+// @version      2.8.3
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -167,7 +167,7 @@
 
       if (!jvcdvBody) return;
 
-      let col = jvcdvBody.querySelector('.col-lg-6');
+      let col = jvcdvBody.querySelector('.col-lg-6') || jvcdvBody.querySelector('.col-md-6'); //JVCDV 2 non mis à jour
 
       if (!col) {
         col = document.createElement('div');
