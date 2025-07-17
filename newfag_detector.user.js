@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.5
+// @version      2.6
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -36,26 +36,20 @@
 
     pseudoId = parseInt(pseudoId, 10);
 
-    let bloc = document.createElement('div');
-    bloc.classList.add('bloc-default-profil');
-    bloc.innerHTML = `
-      <div class="bloc-default-profil-header">
-        <h2>Newfag Detector</h2>
-      </div>
-      <div class="bloc-default-profil-body">
-        <ul class="display-line-lib">
-          <li>
-            <div class="info-lib">Membre depuis :</div>
-            <div class="info-value">
-            </div>
-          </li>
-        </ul>
-      </div>`;
-    col.insertBefore(bloc, col.children[1] || null);
+
+      let bloc = document.createElement('div');
+      bloc.classList.add('bloc-default-profil');
+      bloc.innerHTML = `
+        <div class="bloc-default-profil-header">
+          <h2>Newfag Detector</h2>
+        </div>
+        <div class="bloc-default-profil-body">
+        </div>`;
+    col.appendChild(bloc);
 
     // Injecte le contenu html
     const createBloc = (html) => {
-      bloc.querySelector('.info-value').innerHTML = html;
+      bloc.querySelector('.bloc-default-profil-body').innerHTML = html;
     };
 
     createBloc(`<p style="margin-left: 10px;">Chargement ...</p>`);
