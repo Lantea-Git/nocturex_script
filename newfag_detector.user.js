@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.8.7
+// @version      2.9.0
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
 // @grant        GM_xmlhttpRequest
+// @grant        GM.xmlHttpRequest
 // @icon         http://image.noelshack.com/fichiers/2017/15/1491900495-7.png
 // @connect      api.jeuxvideo.com
 // @downloadURL  https://github.com/Lantea-Git/nocturex_script/raw/main/newfag_detector.user.js
@@ -14,6 +15,11 @@
 
 (() => {
   if (document.querySelector('.img-erreur')) return;
+
+   //IF ONLY GREASYMONKEY MODULE
+   if (typeof GM_xmlhttpRequest !== 'function' && typeof GM?.xmlHttpRequest === 'function') {
+       GM_xmlhttpRequest = GM.xmlHttpRequest;
+   }
 
   const searchAndDisplay = async (col) => {
     const alreadyDisplayed = Array.from(document.querySelectorAll('.info-lib')).find((div) => div.textContent.trim() === 'Membre depuis :');
