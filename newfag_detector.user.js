@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.6.1
+// @version      2.6.2
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
+// @grant        GM.xmlHttpRequest
 // @grant        GM_xmlhttpRequest
 // @icon         http://image.noelshack.com/fichiers/2017/15/1491900495-7.png
 // @connect      api.jeuxvideo.com
@@ -11,6 +12,11 @@
 // @updateURL    https://github.com/NocturneJVC/jvc_script/raw/master/newfag_detector.user.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js
 // ==/UserScript==
+
+//HOOK ONLY GREASYMONKEY MODULE
+if (typeof GM_xmlhttpRequest !== 'function' && typeof GM?.xmlHttpRequest === 'function') {
+    GM_xmlhttpRequest = GM.xmlHttpRequest;
+}
 
 (() => {
   if (document.querySelector('.img-erreur')) return;
@@ -163,3 +169,4 @@
 
   searchAndDisplay(document.querySelector('#page-profil > .layout__content > .row > .col-lg-6'));
 })();
+
