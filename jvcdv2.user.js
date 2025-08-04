@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         JVCDV 2
-// @version      3.1
+// @version      3.2
 // @description  Voir les profils des comptes bannis !
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*
