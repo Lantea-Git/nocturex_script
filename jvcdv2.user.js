@@ -4,6 +4,7 @@
 // @description  Voir les profils des comptes bannis !
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*
+// @grant        GM.xmlHttpRequest
 // @grant        GM_xmlhttpRequest
 // @require      https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js
 // @updateURL    https://github.com/NocturneJVC/jvc_script/raw/master/jvcdv2.user.js
@@ -12,6 +13,11 @@
 
 (async () => {
   if (document.querySelector('.img-erreur')) return;
+
+  //HOOK ONLY GREASYMONKEY MODULE
+  if (typeof GM_xmlhttpRequest !== 'function' && typeof GM?.xmlHttpRequest === 'function') {
+      GM_xmlhttpRequest = GM.xmlHttpRequest;
+  }
 
   if (!/^https?:\/\/www\.jeuxvideo.com\/profil\/(.+)?mode=infos$/.test(document.location.href)) return;
 
