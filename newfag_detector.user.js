@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.9.0
+// @version      2.9.2
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -16,13 +16,13 @@
 (() => {
   if (document.querySelector('.img-erreur')) return;
 
-   //IF ONLY GREASYMONKEY MODULE
+   //HOOK ONLY GREASYMONKEY MODULE
    if (typeof GM_xmlhttpRequest !== 'function' && typeof GM?.xmlHttpRequest === 'function') {
        GM_xmlhttpRequest = GM.xmlHttpRequest;
    }
 
   const searchAndDisplay = async (col) => {
-    const alreadyDisplayed = Array.from(document.querySelectorAll('.info-lib')).find((div) => div.textContent.trim() === 'Membre depuis :');
+    const alreadyDisplayed = [...document.querySelectorAll('.info-lib')].find((div) => div.textContent.trim() === 'Membre depuis :');
 
     if (alreadyDisplayed) return;
 
