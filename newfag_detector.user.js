@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.9.2
+// @version      2.9.8
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -51,8 +51,8 @@
       <div class="bloc-default-profil-body">
         <ul class="display-line-lib">
           <li>
-            <div class="info-lib">Membre depuis :</div>
-            <div class="info-value">
+            <div class="info-lib" title="Afficher systématiquement la date" style="cursor: pointer;">Membre depuis :</div>
+            <div class="info-value"><a id="voir-date" href="#">Cliquer pour afficher la date</a>
             </div>
           </li>
         </ul>
@@ -72,20 +72,27 @@
       return;
     }
 
-
-    createBloc(`<a id="voir-date" href="#">Cliquer pour afficher la date</a>`);
-
-    //Continue fonction (click ou souris over)
-    await new Promise(continuer => {
-      const lien = bloc.querySelector('#voir-date');
-      const typesEvenement = ['click', 'mouseover'];
-      for (const type of typesEvenement) {
-        lien.addEventListener(type, event => {
-          event.preventDefault(); //anule la redirection href
-          continuer();
-        });
-      }
+    //Affiche automatiquement la date 
+    bloc.querySelector('.info-lib')?.addEventListener('click', () => {
+      const newFagAuto = localStorage.getItem('newfag_flag_auto') === 'true';
+      if (!confirm(`${newFagAuto ? 'Ne plus afficher' : 'Afficher'} systématiquement la date ?`)) return;
+      localStorage.setItem('newfag_flag_auto', newFagAuto ? 'false' : 'true');
+      bloc.querySelector('#voir-date')?.click();
     });
+
+
+    // On continue l'exécution avec un clic ou si le local Storage est en auto .
+    if (localStorage.getItem('newfag_flag_auto') !== 'true') {
+      await new Promise(continuer => {
+        const lien = bloc.querySelector('#voir-date');
+        for (const typeAction of ['click', 'mouseover']) {
+          lien.addEventListener(typeAction, event => {
+            event.preventDefault();
+            continuer();
+          }, { once: true });
+        }
+      });
+    }
 
 
     createBloc(`Newfag Detector cherche ...`);
@@ -185,6 +192,6 @@
     return;
   }
 
-  //chemin du selecteur css pour savoir où ajouter le bloc newfag
+  //chemin du selecteur css pour savoir où check la date et ajouter le bloc newfag
   searchAndDisplay(document.querySelector('#page-profil > .layout__content > .row > .col-lg-6'));
 })();
