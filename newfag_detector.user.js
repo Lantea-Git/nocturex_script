@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.6.2
+// @version      2.6.3
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -13,10 +13,6 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js
 // ==/UserScript==
 
-//HOOK ONLY GREASYMONKEY MODULE
-if (typeof GM_xmlhttpRequest !== 'function' && typeof GM?.xmlHttpRequest === 'function') {
-    GM_xmlhttpRequest = GM.xmlHttpRequest;
-}
 
 (() => {
   if (document.querySelector('.img-erreur')) return;
@@ -67,7 +63,7 @@ if (typeof GM_xmlhttpRequest !== 'function' && typeof GM?.xmlHttpRequest === 'fu
       const method = 'GET';
       const signature = CryptoJS.HmacSHA256(`550c04bf5cb2b\n${timestamp}\n${method}\napi.jeuxvideo.com\n/v3/${url}\n`, 'd84e9e5f191ea4ffc39c22d11c77dd6c');
       const header = `PartnerKey=550c04bf5cb2b, Signature=${signature}, Timestamp=${timestamp}`;
-      GM_xmlhttpRequest({
+      (typeof GM_xmlhttpRequest === 'function' ? GM_xmlhttpRequest : GM?.xmlHttpRequest)?.({
         method,
         headers: {
           'Jvc-Authorization': header,
@@ -169,4 +165,5 @@ if (typeof GM_xmlhttpRequest !== 'function' && typeof GM?.xmlHttpRequest === 'fu
 
   searchAndDisplay(document.querySelector('#page-profil > .layout__content > .row > .col-lg-6'));
 })();
+
 
