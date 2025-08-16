@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         JVCDV 2
-// @version      3.2
+// @version      3.3
 // @description  Voir les profils des comptes bannis !
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*
@@ -13,11 +13,6 @@
 
 (async () => {
   if (document.querySelector('.img-erreur')) return;
-
-  //HOOK ONLY GREASYMONKEY MODULE
-  if (typeof GM_xmlhttpRequest !== 'function' && typeof GM?.xmlHttpRequest === 'function') {
-      GM_xmlhttpRequest = GM.xmlHttpRequest;
-  }
 
   if (!/^https?:\/\/www\.jeuxvideo.com\/profil\/(.+)?mode=infos$/.test(document.location.href)) return;
 
@@ -166,7 +161,7 @@
     const method = 'GET';
     const signature = CryptoJS.HmacSHA256(`550c04bf5cb2b\n${timestamp}\n${method}\napi.jeuxvideo.com\n/v3/${url}\n`, 'd84e9e5f191ea4ffc39c22d11c77dd6c');
     const header = `PartnerKey=550c04bf5cb2b, Signature=${signature}, Timestamp=${timestamp}`;
-    GM_xmlhttpRequest({
+    (typeof GM_xmlhttpRequest === 'function' ? GM_xmlhttpRequest : GM?.xmlHttpRequest)?.({
       method,
       headers: {
         'Jvc-Authorization': header,
