@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      2.6.3
+// @version      3.0.0
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -61,7 +61,7 @@
     const requestApiJvc = (url) => new Promise((resolve, reject) => {
       const timestamp = new Date().toISOString();
       const method = 'GET';
-      const signature = CryptoJS.HmacSHA256(`550c04bf5cb2b\n${timestamp}\n${method}\napi.jeuxvideo.com\n/v3/${url}\n`, 'd84e9e5f191ea4ffc39c22d11c77dd6c');
+      const signature = CryptoJS.HmacSHA256(`550c04bf5cb2b\n${timestamp}\n${method}\napi.jeuxvideo.com\n/v4/${url}\n`, 'd84e9e5f191ea4ffc39c22d11c77dd6c');
       const header = `PartnerKey=550c04bf5cb2b, Signature=${signature}, Timestamp=${timestamp}`;
       (typeof GM_xmlhttpRequest === 'function' ? GM_xmlhttpRequest : GM?.xmlHttpRequest)?.({
         method,
@@ -69,7 +69,7 @@
           'Jvc-Authorization': header,
           'Content-Type': 'application/json',
         },
-        url: `https://api.jeuxvideo.com/v3/${url}`,
+        url: `https://api.jeuxvideo.com/v4/${url}`,
         onload: (response) => resolve(JSON.parse(response.responseText)),
         onerror: (response) => reject(response),
       });
@@ -165,5 +165,6 @@
 
   searchAndDisplay(document.querySelector('#page-profil > .layout__content > .row > .col-lg-6'));
 })();
+
 
 
