@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.0.0
+// @version      3.0.1
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -93,11 +93,13 @@
     createBloc(`Newfag Detector cherche ...`);
 
     const requestApiJvc = (url) => new Promise((resolve, reject) => {
+      const partnerKey = '550c04bf5cb2b';
+      const hmacSec = 'd84e9e5f191ea4ffc39c22d11c77dd6c';
       const timestamp = new Date().toISOString();
       const method = 'GET';
-      const apiVersion = 'v4' //passer à 'v3' si ça ne marche pas
-      const signature = CryptoJS.HmacSHA256(`550c04bf5cb2b\n${timestamp}\n${method}\napi.jeuxvideo.com\n/${apiVersion}/${url}\n`, 'd84e9e5f191ea4ffc39c22d11c77dd6c');
-      const header = `PartnerKey=550c04bf5cb2b, Signature=${signature}, Timestamp=${timestamp}`;
+      const apiVersion = 'v4' //passer à 'v5' si ça ne marche pas
+      const signature = CryptoJS.HmacSHA256(`${partnerKey}\n${timestamp}\n${method}\napi.jeuxvideo.com\n/${apiVersion}/${url}\n`, hmacSec);
+      const header = `PartnerKey=${partnerKey}, Signature=${signature}, Timestamp=${timestamp}`;
       //Utilisation du module GM_xmlhttpRequest ou GM.xmlHttpRequest (Greasemonkey)
       (typeof GM_xmlhttpRequest === 'function' ? GM_xmlhttpRequest : GM?.xmlHttpRequest)?.({
         method,
