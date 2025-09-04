@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.0.3
+// @version      3.0.4
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -79,12 +79,14 @@
 
     // On continue l'exécution avec un clic ou si le local Storage est en auto .
     if (localStorage.getItem('newfag_flag_auto') !== 'true') {
-      await new Promise(continuerScript => {
-        const eventTypeTactile = !window.matchMedia('(hover: hover)').matches ? 'click' : 'mouseover';
-        bloc.querySelector('#voir-date').addEventListener(eventTypeTactile, event => {
-          event.preventDefault();
-          continuerScript();
-        }, { once: true });
+      await new Promise(continuer => {
+        const lien = bloc.querySelector('#voir-date');
+        for (const typeAction of ['click', 'mouseover']) {
+          bloc.querySelector('#voir-date').addEventListener(typeAction, event => {
+            event.preventDefault();
+            continuer();
+          }, { once: true });
+        }
       });
     }
 
