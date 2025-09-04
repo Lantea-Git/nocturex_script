@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.0.4
+// @version      3.1.0
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -174,11 +174,11 @@
   const alertDanger = document.querySelector('#page-profil .alert.alert-danger');
   if (alertDanger && alertDanger.textContent.trim() === 'Le pseudo est banni.') {
     setTimeout(() => {
-      const jvcdvBody = document.querySelector('.jvcdv-body');
+      const jvcdvBody = document.querySelector('.jvcdv-body') || alertDanger.parentNode; //JVCDV 2 non mis à jour
 
       if (!jvcdvBody) return;
 
-      let col = jvcdvBody.querySelector('.col-lg-6') || jvcdvBody.querySelector('.col-md-6'); //JVCDV 2 non mis à jour
+      let col = jvcdvBody.querySelector('.col-lg-6, .col-md-6'); //MD JVCDV 2 non mis à jour
 
       if (!col) {
         col = document.createElement('div');
