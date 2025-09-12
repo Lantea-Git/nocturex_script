@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.1.0
+// @version      3.1.1
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -69,18 +69,19 @@
 
     //Affiche automatiquement la date 
     bloc.querySelector('.info-lib')?.addEventListener('click', () => {
-      const newFagAuto = localStorage.getItem('newfag_flag_auto') === 'true';
-      if (!confirm(`${newFagAuto ? 'Ne plus afficher' : 'Afficher'} systématiquement la date ?`)) return;
+      const autoDisplayDate = localStorage.getItem('newfag_flag_auto') === 'true';
 
-      localStorage.setItem('newfag_flag_auto', newFagAuto ? 'false' : 'true');
-      bloc.querySelector('#voir-date')?.click();
+      const confirmeChange = confirm(`${autoDisplayDate ? 'Ne plus afficher' : 'Afficher'} systématiquement la date ?`);
+      if (!confirmeChange) return;
+
+      localStorage.setItem('newfag_flag_auto', autoDisplayDate ? 'false' : 'true');
+      if (!autoDisplayDate) bloc.querySelector('#voir-date')?.click();
     });
 
 
     // On continue l'exécution avec un clic ou si le local Storage est en auto .
     if (localStorage.getItem('newfag_flag_auto') !== 'true') {
       await new Promise(continuer => {
-        const lien = bloc.querySelector('#voir-date');
         for (const typeAction of ['click', 'mouseover']) {
           bloc.querySelector('#voir-date').addEventListener(typeAction, event => {
             event.preventDefault();
