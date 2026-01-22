@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.1.1
+// @version      3.1.6
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -17,7 +17,7 @@
   if (document.querySelector('.img-erreur')) return;
 
   const searchAndDisplay = async (col) => {
-    const alreadyDisplayed = [...document.querySelectorAll('.info-lib')].find((div) => div.textContent.trim() === 'Membre depuis :');
+    const alreadyDisplayed = [...col.querySelectorAll('.info-lib')].find((div) => div.textContent.trim() === 'Membre depuis :');
 
     if (alreadyDisplayed) return;
 
@@ -27,8 +27,8 @@
 
     if (bell) {
       pseudoId = bell.dataset.id;
-    } else if (pictoAttention && /\/profil\/gta\.php\?id=([0-9]+)&/g.test(pictoAttention.dataset.selector)) {
-      pseudoId = RegExp.$1.trim();
+    } else if (pictoAttention) {
+      pseudoId = pictoAttention.dataset.selector.match(/id=(\d+)/)?.[1];
     }
 
     if (!pseudoId) {
@@ -53,12 +53,8 @@
         </ul>
       </div>`;
     col.insertBefore(bloc, col.children[1] || null);
-
     // Injecte le contenu html
-    const createBloc = (html) => {
-      bloc.querySelector('.info-value').innerHTML = html;
-    };
-
+    const createBloc = (html) => (bloc.querySelector('.info-value').innerHTML = html);
 
     const createBlocError = (message) => createBloc(`${message || 'La date de création du pseudo n\'a pas pu être estimée.'}`);
 
@@ -67,7 +63,7 @@
       return;
     }
 
-    //Affiche automatiquement la date 
+    //Affiche automatiquement la date
     bloc.querySelector('.info-lib')?.addEventListener('click', () => {
       const autoDisplayDate = localStorage.getItem('newfag_flag_auto') === 'true';
 
@@ -95,14 +91,12 @@
     createBloc(`Newfag Detector cherche ...`);
 
     const requestApiJvc = (url) => new Promise((resolve, reject) => {
-      const partnerKey = '550c04bf5cb2b';
-      const hmacSec = 'd84e9e5f191ea4ffc39c22d11c77dd6c';
-      const timestamp = new Date().toISOString();
-      const method = 'GET';
+      const partnerKey = '550c04bf5cb2b'; const hmacSec = 'd84e9e5f191ea4ffc39c22d11c77dd6c';
+      const timestamp = new Date().toISOString(); const method = 'GET';
       const apiVersion = 'v4' //passer à 'v5' si ça ne marche pas
       const signature = CryptoJS.HmacSHA256(`${partnerKey}\n${timestamp}\n${method}\napi.jeuxvideo.com\n/${apiVersion}/${url}\n`, hmacSec);
       const header = `PartnerKey=${partnerKey}, Signature=${signature}, Timestamp=${timestamp}`;
-      //Utilisation du module GM_xmlhttpRequest ou GM.xmlHttpRequest (Greasemonkey)
+      // GM ? Classique : (Greasemonkey)
       (typeof GM_xmlhttpRequest === 'function' ? GM_xmlhttpRequest : GM?.xmlHttpRequest)?.({
         method,
         headers: {
@@ -123,7 +117,7 @@
           const id = pseudoId + (i * direction);
           console.log('Newfag Detector: Requête le pseudo n°', id);
           const profile = await requestApiJvc(`accounts/${id}/profile`);
-          if (profile.info && profile.info.creationDate) {
+          if (profile.info?.creationDate) {
             date = new Date(profile.info.creationDate);
             console.log('Newfag Detector: Date trouvée', date, 'pour le pseudo', id, profile.alias);
             break;
@@ -137,7 +131,7 @@
 
     const daysBetween = (date1, date2) => Math.round(Math.abs((date1.getTime() - date2.getTime()) / (24 * 60 * 60 * 1000)));
 
-    const displayNumber = (number) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const displayNumber = (number) => number.toLocaleString("fr-FR").replace(/\s+/g, ".");
 
     const displayDate = (date) => new Date(date).toLocaleDateString('fr-FR', {
       day: 'numeric',
@@ -173,18 +167,18 @@
   };
 
   const alertDanger = document.querySelector('#page-profil .alert.alert-danger');
-  if (alertDanger && alertDanger.textContent.trim() === 'Le pseudo est banni.') {
+  if (alertDanger?.textContent.trim() === 'Le pseudo est banni.') {
     setTimeout(() => {
-      const jvcdvBody = document.querySelector('.jvcdv-body') || alertDanger.parentNode; //JVCDV 2 non mis à jour
+      const jvCdvBody = document.querySelector('.jvcdv-body') || alertDanger.parentNode; //JVCDV 2 non mis à jour
 
-      if (!jvcdvBody) return;
+      if (!jvCdvBody) return;
 
-      let col = jvcdvBody.querySelector('.col-lg-6, .col-md-6'); //MD JVCDV 2 non mis à jour
+      let col = jvCdvBody.querySelector('.col-lg-6, .col-md-6'); //MD JVCDV 2 non mis à jour
 
       if (!col) {
         col = document.createElement('div');
         col.classList.add('col-lg-6');
-        jvcdvBody.after(col);
+        jvCdvBody.after(col);
       }
 
       searchAndDisplay(col);
