@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.1.6
+// @version      3.1.7
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -52,7 +52,7 @@
           </li>
         </ul>
       </div>`;
-    col.insertBefore(bloc, col.children[1] || null);
+    col.firstElementChild ? col.firstElementChild.after(bloc) : col.append(bloc);
     // Injecte le contenu html
     const createBloc = (html) => (bloc.querySelector('.info-value').innerHTML = html);
 
