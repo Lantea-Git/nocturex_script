@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.2.2
+// @version      3.2.3
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -76,7 +76,7 @@
       //Switch Auto Or Manual
       bloc.querySelector('#toggle-date')?.addEventListener('click', () => {
           let autoDisplayDate = localStorage.getItem('new_fag_auto') === 'true';
-          if (!confirm('Afficher systématiquement la date ?')) return;
+          if (!confirm(`${autoDisplayDate ? 'Ne plus afficher' : 'Afficher'} systématiquement la date ?`)) return;
 
           localStorage.setItem('new_fag_auto', (!autoDisplayDate).toString()); // Toggle
           forceShowDate();
