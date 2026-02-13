@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.1.7
+// @version      3.2.2
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -37,7 +37,7 @@
 
     pseudoId = parseInt(pseudoId, 10);
 
-    let bloc = document.createElement('div');
+    const bloc = document.createElement('div');
     bloc.classList.add('bloc-default-profil');
     bloc.innerHTML = `
       <div class="bloc-default-profil-header">
@@ -46,7 +46,7 @@
       <div class="bloc-default-profil-body">
         <ul class="display-line-lib">
           <li>
-            <div class="info-lib" title="Afficher systématiquement la date" style="cursor: pointer;">Membre depuis :</div>
+            <div id="toggle-date" class="info-lib" title="Afficher systématiquement la date" style="cursor: pointer;">Membre depuis :</div>
             <div class="info-value"><a id="voir-date" href="#">Cliquer pour afficher la date</a>
             </div>
           </li>
@@ -54,41 +54,38 @@
       </div>`;
     col.firstElementChild ? col.firstElementChild.after(bloc) : col.append(bloc);
     // Injecte le contenu html
-    const createBloc = (html) => (bloc.querySelector('.info-value').innerHTML = html);
+    const updateBloc = (html) => (bloc.querySelector('.info-value').innerHTML = html);
 
-    const createBlocError = (message) => createBloc(`${message || 'La date de création du pseudo n\'a pas pu être estimée.'}`);
+    const updateBlocError = (message) => updateBloc(`${message || 'La date de création du pseudo n\'a pas pu être estimée.'}`);
 
     if (pseudoId <= 2499961) {
-      createBlocError('Ce pseudo a été créé avant le 16 février 2010.<br>La date exacte ne peut pas être estimée.');
+      updateBlocError('Ce pseudo a été créé avant le 16 février 2010.<br>La date exacte ne peut pas être estimée.');
       return;
     }
 
-    //Affiche automatiquement la date
-    bloc.querySelector('.info-lib')?.addEventListener('click', () => {
-      const autoDisplayDate = localStorage.getItem('newfag_flag_auto') === 'true';
+    // Blocage de la fonction le temps que les conditions d'affichage soient résolues.
+    await new Promise(forceShowDate => {
+      if (localStorage.getItem('new_fag_auto') === 'true') {
+         forceShowDate();
+      } else {
+          bloc.querySelector('#voir-date').addEventListener('mouseover', e => {
+            e.preventDefault();
+            forceShowDate();
+          }, { once: true });
+      }
+      //Switch Auto Or Manual
+      bloc.querySelector('#toggle-date')?.addEventListener('click', () => {
+          let autoDisplayDate = localStorage.getItem('new_fag_auto') === 'true';
+          if (!confirm('Afficher systématiquement la date ?')) return;
 
-      const confirmeChange = confirm(`${autoDisplayDate ? 'Ne plus afficher' : 'Afficher'} systématiquement la date ?`);
-      if (!confirmeChange) return;
-
-      localStorage.setItem('newfag_flag_auto', autoDisplayDate ? 'false' : 'true');
-      if (!autoDisplayDate) bloc.querySelector('#voir-date')?.click();
+          localStorage.setItem('new_fag_auto', (!autoDisplayDate).toString()); // Toggle
+          forceShowDate();
+      });
     });
 
 
-    // On continue l'exécution avec un clic ou si le local Storage est en auto .
-    if (localStorage.getItem('newfag_flag_auto') !== 'true') {
-      await new Promise(continuer => {
-        for (const typeAction of ['click', 'mouseover']) {
-          bloc.querySelector('#voir-date').addEventListener(typeAction, event => {
-            event.preventDefault();
-            continuer();
-          }, { once: true });
-        }
-      });
-    }
 
-
-    createBloc(`Newfag Detector cherche ...`);
+    updateBloc(`Newfag Detector cherche ...`);
 
     const requestApiJvc = (url) => new Promise((resolve, reject) => {
       const partnerKey = '550c04bf5cb2b'; const hmacSec = 'd84e9e5f191ea4ffc39c22d11c77dd6c';
@@ -143,12 +140,12 @@
     const dateAfter = await searchDate(1);
 
     if (!dateBefore) {
-      createBlocError();
+      updateBlocError();
       throw new Error('Impossible de récupérer la date de création du pseudo avant');
     }
 
     if (!dateAfter) {
-      createBlocError();
+      updateBlocError();
       throw new Error('Impossible de récupérer la date de création du pseudo après');
     }
 
@@ -157,13 +154,13 @@
 
     if (dateBeforeFormated !== dateAfterFormated) {
       console.log('Newfag Detector: Les deux dates ne correspondent pas', dateBeforeFormated, dateAfterFormated);
-      createBlocError(`Ce pseudo a été créé entre <br>Le ${dateBeforeFormated} et le ${dateAfterFormated}.<br>Le jour exact ne peut pas être estimé.`);
+      updateBlocError(`Ce pseudo a été créé entre <br>Le ${dateBeforeFormated} et le ${dateAfterFormated}.<br>Le jour exact ne peut pas être estimé.`);
       return;
     }
 
     const nbDays = daysBetween(dateBefore, new Date());
 
-    createBloc(`${dateBeforeFormated} (${displayNumber(nbDays)} jours)`);
+    updateBloc(`${dateBeforeFormated} (${displayNumber(nbDays)} jours)`);
   };
 
   const alertDanger = document.querySelector('#page-profil .alert.alert-danger');
@@ -186,6 +183,6 @@
     return;
   }
 
-  //chemin du selecteur css pour savoir où check la date et ajouter le bloc newfag
+  //Chemin du Selecteur pour savoir où placer NewFagDetector
   searchAndDisplay(document.querySelector('#page-profil > .layout__content > .row > .col-lg-6'));
 })();
