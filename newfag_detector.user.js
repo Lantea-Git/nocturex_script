@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.2.3
+// @version      3.2.9
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -65,22 +65,19 @@
 
     // Blocage de la fonction le temps que les conditions d'affichage soient résolues.
     await new Promise(forceShowDate => {
-      if (localStorage.getItem('new_fag_auto') === 'true') {
-         forceShowDate();
-      } else {
-          bloc.querySelector('#voir-date').addEventListener('mouseover', e => {
-            e.preventDefault();
-            forceShowDate();
-          }, { once: true });
-      }
-      //Switch Auto Or Manual
+      //Switch Auto Manual
       bloc.querySelector('#toggle-date')?.addEventListener('click', () => {
           let autoDisplayDate = localStorage.getItem('new_fag_auto') === 'true';
           if (!confirm(`${autoDisplayDate ? 'Ne plus afficher' : 'Afficher'} systématiquement la date ?`)) return;
-
           localStorage.setItem('new_fag_auto', (!autoDisplayDate).toString()); // Toggle
           forceShowDate();
       });
+
+      //Affichage Auto
+      if (localStorage.getItem('new_fag_auto') === 'true') return forceShowDate();
+
+      //Affichage Manuel
+      bloc.querySelector('#voir-date').addEventListener('mouseover', forceShowDate, { once: true });
     });
 
 
@@ -88,12 +85,12 @@
     updateBloc(`Newfag Detector cherche ...`);
 
     const requestApiJvc = (url) => new Promise((resolve, reject) => {
-      const partnerKey = '550c04bf5cb2b'; const hmacSec = 'd84e9e5f191ea4ffc39c22d11c77dd6c';
-      const timestamp = new Date().toISOString(); const method = 'GET';
+      const partnerKey = '550c04bf5cb2b', hmacSec = 'd84e9e5f191ea4ffc39c22d11c77dd6c';
+      const timestamp = new Date().toISOString(), method = 'GET';
       const apiVersion = 'v4' //passer à 'v5' si ça ne marche pas
+
       const signature = CryptoJS.HmacSHA256(`${partnerKey}\n${timestamp}\n${method}\napi.jeuxvideo.com\n/${apiVersion}/${url}\n`, hmacSec);
       const header = `PartnerKey=${partnerKey}, Signature=${signature}, Timestamp=${timestamp}`;
-      // GM ? Classique : (Greasemonkey)
       (typeof GM_xmlhttpRequest === 'function' ? GM_xmlhttpRequest : GM?.xmlHttpRequest)?.({
         method,
         headers: {
@@ -130,11 +127,8 @@
 
     const displayNumber = (number) => number.toLocaleString("fr-FR").replace(/\s+/g, ".");
 
-    const displayDate = (date) => new Date(date).toLocaleDateString('fr-FR', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
+    const displayDate = (date) => new Date(date)
+      .toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', });
 
     const dateBefore = await searchDate(-1);
     const dateAfter = await searchDate(1);
@@ -183,6 +177,5 @@
     return;
   }
 
-  //Chemin du Selecteur pour savoir où placer NewFagDetector
   searchAndDisplay(document.querySelector('#page-profil > .layout__content > .row > .col-lg-6'));
 })();
