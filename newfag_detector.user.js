@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.3.0
+// @version      3.3.1
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -28,7 +28,7 @@
     if (bell) {
       pseudoId = bell.dataset.id;
     } else if (pictoAttention) {
-      pseudoId = pictoAttention.dataset.url?.match(/id=(\d+)/)?.[1];
+      pseudoId = pictoAttention.dataset.url.match(/id=(\d+)/)?.[1];
     }
 
     if (!pseudoId) {
