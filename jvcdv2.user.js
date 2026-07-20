@@ -1,20 +1,18 @@
 // ==UserScript==
 // @name         JVCDV 2
-// @version      3.4
+// @version      3.9
 // @description  Voir les profils des comptes bannis !
 // @author       NocturneX
-// @match        *://www.jeuxvideo.com/profil/*
+// @match        *://www.jeuxvideo.com/profil/*?mode=infos
 // @grant        GM.xmlHttpRequest
 // @grant        GM_xmlhttpRequest
-// @require      https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js
 // @updateURL    https://github.com/NocturneJVC/jvc_script/raw/master/jvcdv2.user.js
 // @connect      api.jeuxvideo.com
+// @require      https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.11.1/sha256.min.js
 // ==/UserScript==
 
 (async () => {
   if (document.querySelector('.img-erreur')) return;
-
-  if (!/^https?:\/\/www\.jeuxvideo.com\/profil\/(.+)?mode=infos$/.test(document.location.href)) return;
 
   const alertDanger = document.querySelector('#page-profil .alert.alert-danger');
   if (!alertDanger) return;
@@ -28,7 +26,7 @@
 
   if (bell) {
     pseudoId = bell.dataset.id;
-  } else if (pictoAttention && /\/profil\/gta\.php\?id=([0-9]+)&/g.test(pictoAttention.dataset.selector)) {
+  } else if (pictoAttention && /\/profil\/gta\.php\?id=([0-9]+)&/g.test(pictoAttention.dataset.url)) {
     pseudoId = RegExp.$1.trim();
   }
 
@@ -159,7 +157,7 @@
   const requestApiJvc = (url) => new Promise((resolve, reject) => {
     const timestamp = new Date().toISOString();
     const method = 'GET';
-    const signature = CryptoJS.HmacSHA256(`550c04bf5cb2b\n${timestamp}\n${method}\napi.jeuxvideo.com\n/v4/${url}\n`, 'd84e9e5f191ea4ffc39c22d11c77dd6c');
+    const signature = sha256.hmac( 'd84e9e5f191ea4ffc39c22d11c77dd6c', `550c04bf5cb2b\n${timestamp}\n${method}\napi.jeuxvideo.com\n/v4/${url}\n`);
     const header = `PartnerKey=550c04bf5cb2b, Signature=${signature}, Timestamp=${timestamp}`;
     (typeof GM_xmlhttpRequest === 'function' ? GM_xmlhttpRequest : GM?.xmlHttpRequest)?.({
       method,
