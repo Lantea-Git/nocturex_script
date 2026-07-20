@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.3.3
+// @version      3.4.1
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -10,7 +10,7 @@
 // @connect      api.jeuxvideo.com
 // @downloadURL  https://raw.githubusercontent.com/Lantea-Git/nocturex_script/main/newfag_detector.user.js
 // @updateURL    https://raw.githubusercontent.com/Lantea-Git/nocturex_script/main/newfag_detector.user.js
-// @require      https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.11.1/sha256.min.js
 // ==/UserScript==
 
 (() => {
@@ -46,7 +46,7 @@
       <div class="bloc-default-profil-body">
         <ul class="display-line-lib">
           <li>
-            <div id="toggle-date" class="info-lib" title="Afficher systématiquement la date" style="cursor: pointer;">Membre depuis :</div>
+            <div id="toggle-force-date" class="info-lib" title="Afficher systématiquement la date">Membre depuis :</div>
             <div class="info-value"><a id="voir-date" href="#">Cliquer pour afficher la date</a>
             </div>
           </li>
@@ -66,7 +66,9 @@
     // Blocage de la fonction le temps que les conditions d'affichage soient résolues.
     await new Promise(forceShowDate => {
       //Switch Auto Manual
-      bloc.querySelector('#toggle-date')?.addEventListener('click', () => {
+      const toggleForceDate = bloc.querySelector('#toggle-force-date');
+      toggleForceDate.style.cursor = 'pointer';
+      toggleForceDate.addEventListener('click', () => {
           let autoDisplayDate = localStorage.getItem('new_fag_auto') === 'true';
           if (!confirm(`${autoDisplayDate ? 'Ne plus afficher' : 'Afficher'} systématiquement la date ?`)) return;
           localStorage.setItem('new_fag_auto', (!autoDisplayDate).toString()); // Toggle
@@ -89,7 +91,7 @@
       const timestamp = new Date().toISOString(), method = 'GET';
       const apiVersion = 'v4' //passer à 'v5' si ça ne marche pas
 
-      const signature = CryptoJS.HmacSHA256(`${partnerKey}\n${timestamp}\n${method}\napi.jeuxvideo.com\n/${apiVersion}/${url}\n`, hmacSec);
+      const signature = sha256.hmac(hmacSec, `${partnerKey}\n${timestamp}\n${method}\napi.jeuxvideo.com\n/${apiVersion}/${url}\n`);
       const header = `PartnerKey=${partnerKey}, Signature=${signature}, Timestamp=${timestamp}`;
       (typeof GM_xmlhttpRequest === 'function' ? GM_xmlhttpRequest : GM?.xmlHttpRequest)?.({
         method,
