@@ -1,10 +1,9 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.4.1
+// @version      3.4.2
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
-// @grant        GM_xmlhttpRequest
 // @grant        GM.xmlHttpRequest
 // @icon         http://image.noelshack.com/fichiers/2017/15/1491900495-7.png
 // @connect      api.jeuxvideo.com
@@ -93,7 +92,7 @@
 
       const signature = sha256.hmac(hmacSec, `${partnerKey}\n${timestamp}\n${method}\napi.jeuxvideo.com\n/${apiVersion}/${url}\n`);
       const header = `PartnerKey=${partnerKey}, Signature=${signature}, Timestamp=${timestamp}`;
-      (typeof GM_xmlhttpRequest === 'function' ? GM_xmlhttpRequest : GM?.xmlHttpRequest)?.({
+      GM.xmlHttpRequest({
         method,
         headers: {
           'Jvc-Authorization': header,
