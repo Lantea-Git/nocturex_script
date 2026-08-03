@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.4.2
+// @version      3.4.3
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -86,19 +86,19 @@
     updateBloc(`Newfag Detector cherche ...`);
 
     const requestApiJvc = (url) => new Promise((resolve, reject) => {
-      const partnerKey = '550c04bf5cb2b', hmacSec = 'd84e9e5f191ea4ffc39c22d11c77dd6c';
-      const timestamp = new Date().toISOString(), method = 'GET';
-      const apiVersion = 'v4' //passer à 'v5' si ça ne marche pas
 
-      const signature = sha256.hmac(hmacSec, `${partnerKey}\n${timestamp}\n${method}\napi.jeuxvideo.com\n/${apiVersion}/${url}\n`);
+      const timestamp = new Date().toISOString(), method = 'GET';
+      const partnerKey = '550c04bf5cb2b', version = 'v4' //passer à 'v5' si ça ne marche pas
+
+      const signature = sha256.hmac('d84e9e5f191ea4ffc39c22d11c77dd6c', `${partnerKey}\n${timestamp}\n${method}\napi.jeuxvideo.com\n/${version}/${url}\n`);
       const header = `PartnerKey=${partnerKey}, Signature=${signature}, Timestamp=${timestamp}`;
       GM.xmlHttpRequest({
-        method,
+        method: method,
         headers: {
           'Jvc-Authorization': header,
           'Content-Type': 'application/json',
         },
-        url: `https://api.jeuxvideo.com/${apiVersion}/${url}`,
+        url: `https://api.jeuxvideo.com/${version}/${url}`,
         onload: (response) => resolve(JSON.parse(response.responseText)),
         onerror: (response) => reject(response),
       });
