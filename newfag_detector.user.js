@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.4.3
+// @version      3.4.4
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -88,9 +88,9 @@
     const requestApiJvc = (url) => new Promise((resolve, reject) => {
 
       const timestamp = new Date().toISOString(), method = 'GET';
-      const partnerKey = '550c04bf5cb2b', version = 'v4' //passer à 'v5' si ça ne marche pas
+      const partnerKey = '550c04bf5cb2b', versionApi = 'v4' //passer à 'v5' si ça ne marche pas
 
-      const signature = sha256.hmac('d84e9e5f191ea4ffc39c22d11c77dd6c', `${partnerKey}\n${timestamp}\n${method}\napi.jeuxvideo.com\n/${version}/${url}\n`);
+      const signature = sha256.hmac('d84e9e5f191ea4ffc39c22d11c77dd6c', `${partnerKey}\n${timestamp}\n${method}\napi.jeuxvideo.com\n/${versionApi}/${url}\n`);
       const header = `PartnerKey=${partnerKey}, Signature=${signature}, Timestamp=${timestamp}`;
       GM.xmlHttpRequest({
         method: method,
@@ -98,7 +98,7 @@
           'Jvc-Authorization': header,
           'Content-Type': 'application/json',
         },
-        url: `https://api.jeuxvideo.com/${version}/${url}`,
+        url: `https://api.jeuxvideo.com/${versionApi}/${url}`,
         onload: (response) => resolve(JSON.parse(response.responseText)),
         onerror: (response) => reject(response),
       });
