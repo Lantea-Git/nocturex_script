@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Newfag detecor
-// @version      3.4.4
+// @version      3.4.5
 // @description  Affiche l'ancienneté des pseudos qui le cachent
 // @author       NocturneX
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
@@ -126,7 +126,7 @@
 
     const daysBetween = (date1, date2) => Math.round(Math.abs((date1.getTime() - date2.getTime()) / (24 * 60 * 60 * 1000)));
 
-    const displayNumber = (number) => number.toLocaleString("fr-FR").replace(/\s+/g, ".");
+    const displayNumber = (number) => number.toLocaleString("de-DE");
 
     const displayDate = (date) => new Date(date)
       .toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', });
